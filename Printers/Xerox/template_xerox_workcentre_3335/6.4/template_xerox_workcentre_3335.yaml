@@ -1,0 +1,248 @@
+zabbix_export:
+  version: '6.4'
+  template_groups:
+    -
+      uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+  templates:
+    -
+      uuid: 3baf813e62b041329a5d0836bd8b9a72
+      template: 'Xerox WorkCentre 3335'
+      name: 'Xerox WorkCentre 3335'
+      groups:
+        -
+          name: Templates
+      items:
+        -
+          uuid: 9fe211edc32844448615a155ee2b5001
+          name: 'Drum cartridge - level (%)'
+          type: CALCULATED
+          key: printer.drum_cartridge.level_percent
+          delay: 5m
+          history: 7d
+          units: '%'
+          params: '100*last(//printer.drum_cartridge.pages_remaining)/last(//printer.drum_cartridge.pages_capacity)'
+          triggers:
+            -
+              uuid: 22edebe3d0804fc2bb15d5898489a7d8
+              expression: 'last(/Xerox WorkCentre 3335/printer.drum_cartridge.level_percent)<{$PRINTER_DRUMCARTRIDGE_LOW}'
+              name: 'Replace drum cartridge'
+              priority: WARNING
+        -
+          uuid: f02ba34e388f4e0687fb44225f3dd0e4
+          name: 'Drum cartridge - pages capacity'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.43.11.1.1.8.1.2
+          key: printer.drum_cartridge.pages_capacity
+          delay: 5m
+          history: 7d
+        -
+          uuid: ceb320743aa24129b7b783699335eeea
+          name: 'Drum cartridge - pages remaining'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.43.11.1.1.9.1.2
+          key: printer.drum_cartridge.pages_remaining
+          delay: 5m
+          history: 7d
+        -
+          uuid: dcf8f8ecf765451092ccd7db1041a325
+          name: 'Drum cartridge - type'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.6.1.2
+          key: printer.drum_cartridge.type
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+        -
+          uuid: 0c62bce619314c7293aa65629ffc263c
+          name: 'HDD size'
+          type: SNMP_AGENT
+          snmp_oid: 'HOST-RESOURCES-MIB::hrStorageSize.2'
+          key: printer.hdd.size
+          delay: 5m
+          history: 7d
+          units: B
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '1024'
+        -
+          uuid: 802feef9778449498b926f5ae5220a2a
+          name: 'HDD used'
+          type: SNMP_AGENT
+          snmp_oid: 'HOST-RESOURCES-MIB::hrStorageUsed.2'
+          key: printer.hdd.used
+          delay: 5m
+          history: 7d
+          units: B
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '1024'
+        -
+          uuid: 5fc8abf4b8b14a84b28a449e21922a31
+          name: 'HDD utilisation'
+          type: CALCULATED
+          key: printer.hdd.utilisation
+          delay: 5m
+          history: 7d
+          units: '%'
+          params: '100*last(//printer.hdd.used)/last(//printer.hdd.size)'
+        -
+          uuid: 4e8b9518c7114fa5b438cef14644b7de
+          name: Location
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.6.0
+          key: printer.location
+          delay: 4h
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+        -
+          uuid: 6cc3e1adb22449b6ab20d691b9ea6868
+          name: Model
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.25.3.2.1.3.1
+          key: printer.model
+          delay: 1d
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+          inventory_link: TYPE
+        -
+          uuid: 1b2661d3e11a4fcaab61f33daa9a9adb
+          name: 'Pages printed'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.43.10.2.1.4.1.1
+          key: printer.pages_printed
+          delay: 5m
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+        -
+          uuid: e30f5c5d142a4ee4b0c107523934ddfe
+          name: 'RAM size'
+          type: SNMP_AGENT
+          snmp_oid: 'HOST-RESOURCES-MIB::hrStorageSize.1'
+          key: printer.ram.size
+          delay: 5m
+          history: 7d
+          units: B
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '1024'
+        -
+          uuid: 9d3fc25dc04f46aba9f92073229fdd2f
+          name: 'RAM used'
+          type: SNMP_AGENT
+          snmp_oid: 'HOST-RESOURCES-MIB::hrStorageUsed.1'
+          key: printer.ram.used
+          delay: 5m
+          history: 7d
+          units: B
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '1024'
+        -
+          uuid: 5d19115beb5a448bbd424cf643c731aa
+          name: 'RAM utilisation'
+          type: CALCULATED
+          key: printer.ram.utilisation
+          delay: 5m
+          history: 7d
+          units: '%'
+          params: '100*last(//printer.ram.used)/last(//printer.ram.size)'
+        -
+          uuid: d989aa3f84b545d8b0fb78ae50fbb53a
+          name: 'Serial number'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.43.5.1.1.17.1
+          key: printer.serial_number
+          delay: 1d
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+        -
+          uuid: 9355b8000b0a4954b4d39219616c9414
+          name: 'Toner cartridge - BLACK - level (%)'
+          type: CALCULATED
+          key: printer.toner_cartridge.black.level_percent
+          delay: 5m
+          history: 7d
+          units: '%'
+          params: '100*last(//printer.toner_cartridge.black.pages_remaining)/last(//printer.toner_cartridge.black.pages_capacity)'
+          triggers:
+            -
+              uuid: 5e5a921c2040429496337bc12fb99ca0
+              expression: 'last(/Xerox WorkCentre 3335/printer.toner_cartridge.black.level_percent)<{$PRINTER_TONERCARTRIDGE_BLACK_LOW}'
+              name: 'Low toner - BLACK'
+              priority: WARNING
+              dependencies:
+                -
+                  name: 'No toner - BLACK'
+                  expression: 'last(/Xerox WorkCentre 3335/printer.toner_cartridge.black.level_percent)=0'
+            -
+              uuid: 515676b5370648098a024203ade98eb6
+              expression: 'last(/Xerox WorkCentre 3335/printer.toner_cartridge.black.level_percent)=0'
+              name: 'No toner - BLACK'
+              priority: HIGH
+        -
+          uuid: 25a1ef3e517f4ba0aa44e60e3828d264
+          name: 'Toner cartridge - BLACK - pages capacity'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.43.11.1.1.8.1.1
+          key: printer.toner_cartridge.black.pages_capacity
+          delay: 5m
+          history: 7d
+        -
+          uuid: 6d50dad8e49446168eb830a5aa816069
+          name: 'Toner cartridge - BLACK - pages remaining'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.43.11.1.1.9.1.1
+          key: printer.toner_cartridge.black.pages_remaining
+          delay: 5m
+          history: 7d
+        -
+          uuid: fc393c4a4fe1482f9eb7d66d810bd03d
+          name: 'Toner cartridge - BLACK - type'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.43.11.1.1.6.1.1
+          key: printer.toner_cartridge.black.type
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: TEXT
+      tags:
+        -
+          tag: component
+          value: printer
+      macros:
+        -
+          macro: '{$PRINTER_DRUMCARTRIDGE_LOW}'
+          value: '10'
+          description: 'Remaining lifetime of drum cartrige (percent)'
+        -
+          macro: '{$PRINTER_TONERCARTRIDGE_BLACK_LOW}'
+          value: '20'
+          description: 'Remaining lifetime of black toner cartrige (percent)'
+  graphs:
+    -
+      uuid: 2c1439187fbe4fbdae3eccf18825ece1
+      name: 'Toner - BLACK'
+      width: '200'
+      ymin_type_1: FIXED
+      ymax_type_1: FIXED
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: '000000'
+          item:
+            host: 'Xerox WorkCentre 3335'
+            key: printer.toner_cartridge.black.level_percent
